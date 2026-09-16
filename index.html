@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>André Borges | Engenheiro de Dados</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        bgMain: 'var(--bg-main)',
+                        cardBg: 'var(--bg-card)',
+                        cardBorder: 'var(--border-color)',
+                        textMain: 'var(--text-main)',
+                        textGray: 'var(--text-muted)',
+                        badgeBg: 'var(--badge-bg)',
+                        primary: '#18D26E',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Paleta Light Mode */
+        :root {
+            --bg-main: #fafafa;
+            --bg-card: #ffffff;
+            --border-color: #e4e4e7;
+            --text-main: #18181b;
+            --text-muted: #52525b;
+            --badge-bg: #f4f4f5;
+            --glow-start: rgba(24, 210, 110, 0.08);
+        }
+
+        /* Paleta Dark Mode (Baseada nas suas imagens) */
+        .dark {
+            --bg-main: #09090b;
+            --bg-card: #121214;
+            --border-color: #27272a;
+            --text-main: #fafafa;
+            --text-muted: #a1a1aa;
+            --badge-bg: #1f1f22;
+            --glow-start: rgba(24, 210, 110, 0.12);
+        }
+
+        body { 
+            background-color: var(--bg-main); 
+            color: var(--text-main); 
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .hero-glow {
+            position: absolute;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(circle, var(--glow-start) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+            transition: background 0.3s;
+        }
+
+        ul.custom-bullets { list-style: none; padding-left: 0; }
+        ul.custom-bullets li { position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem;}
+        ul.custom-bullets li::before {
+            content: "•";
+            color: #18D26E;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3rem;
+            height: 3rem;
+            background-color: #18D26E;
+            color: #09090b;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+            transition: opacity 0.3s, background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 12px rgba(24, 210, 110, 0.3);
+        }
+
+        #back-to-top:hover {
+            background-color: #15b85c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(24, 210, 110, 0.4);
+        }
+
+        #back-to-top.show {
+            display: flex;
+        }
+
+        @media (max-width: 640px) {
+            #back-to-top {
+                width: 2.5rem;
+                height: 2.5rem;
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>    
+</head>
+<body class="antialiased font-sans relative bg-bgMain text-textMain">
+
+    <div class="hero-glow"></div>
+
+    <nav class="fixed top-0 w-full bg-bgMain/80 backdrop-blur-md z-50 border-b border-cardBorder transition-colors duration-300">
+        <div class="max-w-[1100px] mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tight">André<span class="text-primary">.</span>Borges</div>
+            <div class="hidden md:flex space-x-6 text-sm font-medium text-textGray">
+                <a href="#projetos" class="hover:text-primary transition">Projetos</a>
+                <a href="#skills" class="hover:text-primary transition">Skills</a>
+                <a href="#experiencia" class="hover:text-primary transition">Experiência</a>
+                <a href="#contato" class="hover:text-primary transition">Contato</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="https://github.com/andreribeiro41" class="text-textGray hover:text-primary transition inline-flex" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/andre-ribeiro-borges/" class="text-textGray hover:text-primary transition inline-flex" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+                <div class="w-px h-4 bg-cardBorder mx-2"></div>
+                <button id="theme-toggle" class="hover:text-primary transition text-textGray" aria-label="Alternar tema">
+                    <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="max-w-[1100px] mx-auto px-6 pt-40 pb-24">
+        <span class="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary dark:text-primary mb-6">
+            Disponível para oportunidades
+        </span>
+        <h1 class="text-5xl md:text-[64px] font-extrabold tracking-tight leading-[1.1] mb-6 text-textMain">
+            Engenheiro de Dados<br>
+            <span class="text-primary">Analytics Engineer</span>
+        </h1>
+        <div class="flex items-center space-x-3 text-textGray text-[15px] mb-8 font-medium">
+            <span>Pipelines ETL/ELT</span> <span class="text-cardBorder">•</span>
+            <span>SQL Server</span> <span class="text-cardBorder">•</span>
+            <span>Airflow</span> <span class="text-cardBorder">•</span>
+            <span>Modelagem Dimensional</span> <span class="text-cardBorder">•</span>
+            <span>Datawarehouse</span>
+        </div>
+        <p class="text-textGray text-lg max-w-2xl leading-relaxed mb-10">
+            Construo pipelines confiáveis, camadas Bronze/Silver/Gold e modelos Star Schema, com foco em performance, qualidade de dados e deploy reprodutível utilizando Git/CI/CD e Docker.
+        </p>
+        
+        <div class="flex flex-wrap gap-4 items-center">
+            <button class="bg-primary hover:bg-primary/80 text-white px-6 py-3 rounded-lg font-medium transition shadow-lg shadow-primary/20">
+                <a href="#projetos" class="hover:text-primary transition">Ver Projetos</a>
+            </button>
+            <button class="border border-cardBorder hover:bg-badgeBg text-textMain px-6 py-3 rounded-lg font-medium transition">
+                <a href="#contato" class="hover:text-primary transition">Falar comigo</a>
+            </button>
+            <button class="flex items-center space-x-2 text-textGray hover:text-primary px-4 py-3 font-medium transition ml-2">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>Baixar CV</span>
+            </button>
+        </div>
+    </header>
+
+    <section id="projetos" class="max-w-[1100px] mx-auto px-6 py-20 border-t border-cardBorder/50">
+        <h2 class="text-3xl font-bold mb-3 tracking-tight text-textMain">Projetos em Destaque</h2>
+        <p class="text-textGray mb-12">Uma seleção de projetos práticos demonstrando soluções de arquitetura de dados, pipelines ETL/ELT e modelagem analítica.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Projeto 1: Pipeline de Analytics Financeiro -->
+            <div class="bg-cardBg border border-cardBorder p-7 rounded-2xl hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition duration-300 flex flex-col">
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="text-[11px] font-medium border border-primary/30 bg-primary/10 text-primary px-2.5 py-0.5 rounded-full">
+                        End-to-End Analytics
+                    </span>
+                    <a href="https://github.com/andreribeiro41/pipeline_analytics_financeiro" target="_blank" rel="noopener noreferrer" class="text-textGray hover:text-primary transition" title="Ver no GitHub">
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <h3 class="text-xl font-bold mb-2 text-textMain leading-snug">Pipeline de Analytics Financeiro</h3>
+                <p class="text-sm text-textGray mb-6 flex-grow leading-relaxed">
+                    Pipeline completo simulando backoffice financeiro: dados transacionais em PostgreSQL (OLTP) orquestrados via Airflow para DW, transformados e testados com dbt, e visualizados em Streamlit.
+                </p>
+                
+                <div class="mb-6">
+                    <p class="text-[11px] font-bold tracking-wider text-textGray uppercase mb-3">Destaques</p>
+                    <ul class="custom-bullets">
+                        <li>Fluxo OLTP → Airflow → DW → dbt → Streamlit</li>
+                        <li>Modelagem Dimensional (Star Schema) com testes e docs</li>
+                        <li>Ambiente 100% conteinerizado com Docker Compose</li>
+                    </ul>
+                </div>
+
+                <div class="mb-8">
+                    <p class="text-[11px] font-bold tracking-wider text-textGray uppercase mb-3">Stack</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">Airflow</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">dbt</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">PostgreSQL</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">Streamlit</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">Docker</span>
+                    </div>
+                </div>
+                
+                <a href="https://github.com/andreribeiro41/pipeline_analytics_financeiro" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 border border-cardBorder text-textMain rounded-lg text-sm font-medium flex items-center justify-center space-x-2 hover:bg-badgeBg hover:border-primary/50 hover:text-primary transition mt-auto">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                    <span>Ver Repositório</span>
+                </a>
+            </div>
+
+            <!-- Projeto 2: Crypto Data Engineer -->
+            <div class="bg-cardBg border border-cardBorder p-7 rounded-2xl hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition duration-300 flex flex-col">
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="text-[11px] font-medium border border-primary/30 bg-primary/10 text-primary px-2.5 py-0.5 rounded-full">
+                        Arquitetura Medalhão
+                    </span>
+                    <a href="https://github.com/andreribeiro41/crypto_data_engineer" target="_blank" rel="noopener noreferrer" class="text-textGray hover:text-primary transition" title="Ver no GitHub">
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <h3 class="text-xl font-bold mb-2 text-textMain leading-snug">Crypto Portfolio & ETL Pipeline</h3>
+                <p class="text-sm text-textGray mb-6 flex-grow leading-relaxed">
+                    Solução de Engenharia de Dados para gestão de portfólio cripto. Implementa pipeline ETL seguindo arquitetura Medalhão (Bronze, Silver, Gold), API do CoinMarketCap e painel analítico interativo.
+                </p>
+                
+                <div class="mb-6">
+                    <p class="text-[11px] font-bold tracking-wider text-textGray uppercase mb-3">Destaques</p>
+                    <ul class="custom-bullets">
+                        <li>Camadas Bronze (JSON bruto), Silver e Gold (KPIs diários)</li>
+                        <li>Ingestão via CoinMarketCap API com ativos dinâmicos</li>
+                        <li>Dashboard interativo com PnL em tempo real e ordens</li>
+                    </ul>
+                </div>
+
+                <div class="mb-8">
+                    <p class="text-[11px] font-bold tracking-wider text-textGray uppercase mb-3">Stack</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">Python</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">PostgreSQL</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">Streamlit</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">Pandas</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">REST API</span>
+                    </div>
+                </div>
+                
+                <a href="https://github.com/andreribeiro41/crypto_data_engineer" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 border border-cardBorder text-textMain rounded-lg text-sm font-medium flex items-center justify-center space-x-2 hover:bg-badgeBg hover:border-primary/50 hover:text-primary transition mt-auto">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                    <span>Ver Repositório</span>
+                </a>
+            </div>
+
+            <!-- Projeto 3: E-commerce ETL -->
+            <div class="bg-cardBg border border-cardBorder p-7 rounded-2xl hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition duration-300 flex flex-col md:col-span-2 lg:col-span-1">
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="text-[11px] font-medium border border-primary/30 bg-primary/10 text-primary px-2.5 py-0.5 rounded-full">
+                        Pipeline ETL & SQL
+                    </span>
+                    <a href="https://github.com/andreribeiro41/ecommerceetl" target="_blank" rel="noopener noreferrer" class="text-textGray hover:text-primary transition" title="Ver no GitHub">
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <h3 class="text-xl font-bold mb-2 text-textMain leading-snug">Pipeline ETL de E-commerce</h3>
+                <p class="text-sm text-textGray mb-6 flex-grow leading-relaxed">
+                    Pipeline ETL completo para ingestão, tratamento e modelagem dimensional de pedidos, clientes e produtos a partir de fontes heterogêneas, com análises de negócio via SQL.
+                </p>
+                
+                <div class="mb-6">
+                    <p class="text-[11px] font-bold tracking-wider text-textGray uppercase mb-3">Destaques</p>
+                    <ul class="custom-bullets">
+                        <li>Limpeza, validação de tipos e deduplicação de dados</li>
+                        <li>Modelagem dimensional com tabelas Fato e Dimensões</li>
+                        <li>Consultas SQL analíticas para métricas comerciais</li>
+                    </ul>
+                </div>
+
+                <div class="mb-8">
+                    <p class="text-[11px] font-bold tracking-wider text-textGray uppercase mb-3">Stack</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">Python</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">Pandas</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">SQL</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">SQLite</span>
+                        <span class="text-[11px] border border-cardBorder text-textGray px-2 py-1 rounded-md bg-badgeBg/40">ETL</span>
+                    </div>
+                </div>
+                
+                <a href="https://github.com/andreribeiro41/ecommerceetl" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 border border-cardBorder text-textMain rounded-lg text-sm font-medium flex items-center justify-center space-x-2 hover:bg-badgeBg hover:border-primary/50 hover:text-primary transition mt-auto">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                    <span>Ver Repositório</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="max-w-[1100px] mx-auto px-6 py-20 border-t border-cardBorder/50">
+        <h2 class="text-3xl font-bold mb-3 tracking-tight text-textMain">Conhecimento Técnico</h2>
+        <p class="text-textGray mb-12">Tecnologias e metodologias que compõem meu cinto de utilidades.</p>
+
+        <div class="grid md:grid-cols-2 gap-x-12 gap-y-10">
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="database" class="w-5 h-5 text-primary"></i>
+                    <h3 class="text-lg font-semibold text-primary">Engenharia de Dados</h3>
+                </div>
+                <p class="text-sm text-textGray mb-4">Design, construção e manutenção de pipelines robustos.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">ETL/ELT</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Airflow</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Arquitetura Medalhão (Bronze/Silver/Gold)</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">DW / Lakehouse</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="network" class="w-5 h-5 text-primary"></i>
+                    <h3 class="text-lg font-semibold text-primary">Modelagem & SQL</h3>
+                </div>
+                <p class="text-sm text-textGray mb-4">Estruturação de dados para máxima performance analítica.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Star Schema</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Modelagem Relacional</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">SCD2</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">SQL Avançado</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="file-check-2" class="w-5 h-5 text-primary"></i>
+                    <h3 class="text-lg font-semibold text-primary">Qualidade & Governança</h3>
+                </div>
+                <p class="text-sm text-textGray mb-4">Garantindo confiabilidade e documentação dos ativos de dados.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Validação de Dados</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Testes Automatizados</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Documentação</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Data Catalog</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="cloud" class="w-5 h-5 text-primary"></i>
+                    <h3 class="text-lg font-semibold text-primary">Cloud & Tools</h3>
+                </div>
+                <p class="text-sm text-textGray mb-4">Infraestrutura, versionamento e visualização.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">AWS (S3, Glue, Athena, Redshift)</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Snowflake</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Docker</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Git / CI/CD</span>
+                    <span class="bg-badgeBg border border-cardBorder text-textMain px-3 py-1.5 rounded-md text-sm font-medium">Power BI</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experiencia" class="max-w-[1100px] mx-auto px-6 py-20 border-t border-cardBorder/50">
+        <h2 class="text-3xl font-bold mb-12 tracking-tight text-textMain">Trajetória Profissional</h2>
+
+        <div class="relative border-l border-cardBorder ml-3 md:ml-4">
+            
+            <!-- Janus Automation - Full Stack -->
+            <div class="mb-12 pl-8 relative">
+                <div class="absolute w-3 h-3 bg-primary rounded-full -left-[6.5px] top-1.5 ring-4 ring-bgMain"></div>
+                <h3 class="text-xl font-bold mb-2 text-textMain">Desenvolvedor Full Stack</h3>
+                <div class="inline-flex items-center gap-1.5 bg-badgeBg border border-cardBorder text-textGray text-xs px-2.5 py-1 rounded-md mb-4 font-medium">
+                    <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                    Janus Automation | Jan 2025 - Atual
+                </div>
+                <p class="text-textGray text-sm mb-4 leading-relaxed max-w-3xl">
+                    Sustentação e evolução de sistemas industriais, integração de aplicações e desenvolvimento de dashboards para informe operativo e monitoramento da linha de produção.
+                </p>
+                <ul class="custom-bullets">
+                    <li>Desenvolvimento e integração de aplicações Web e Windows (C#, AngularJS, jQuery, HTML5, CSS/Bootstrap, JavaScript).</li>
+                    <li>Construção de dashboards e painéis de indicadores em sistema de informe operativo para tomadas de decisão.</li>
+                    <li>Modelagem, desenvolvimento e manutenção de objetos de banco de dados no Microsoft SQL Server.</li>
+                    <li>Sustentação de sistemas legados, atendimento a clientes internos para levantamento de requisitos e gestão de documentação técnica.</li>
+                </ul>
+            </div>
+
+            <!-- Janus Automation - Analista de Banco de Dados Pleno -->
+            <div class="mb-12 pl-8 relative">
+                <div class="absolute w-3 h-3 bg-cardBorder rounded-full -left-[6.5px] top-1.5 ring-4 ring-bgMain"></div>
+                <h3 class="text-xl font-bold mb-2 text-textMain">Analista de Banco de Dados Pleno</h3>
+                <div class="inline-flex items-center gap-1.5 bg-badgeBg border border-cardBorder text-textGray text-xs px-2.5 py-1 rounded-md mb-4 font-medium">
+                    <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                    Janus Automation | Mai 2022 - Jan 2025
+                </div>
+                <p class="text-textGray text-sm mb-4 leading-relaxed max-w-3xl">
+                    Desenvolvimento e manutenção de processos de Business Intelligence (BI) e bancos de dados na plataforma Microsoft para análise de indicadores de produção industrial (aço e co-produtos).
+                </p>
+                <ul class="custom-bullets">
+                    <li>Construção e sustentação de cubos OLAP via Microsoft Analysis Services (SSAS) e processos de ETL com Integration Services (SSIS).</li>
+                    <li>Programação avançada em T-SQL: modelagem de dados, stored procedures, triggers, views, functions e rotinas de manutenção.</li>
+                    <li>Tuning e otimização de performance através da criação de índices e análise de planos de execução.</li>
+                </ul>
+            </div>
+
+            <!-- SGC Consultoria & Sistemas -->
+            <div class="mb-12 pl-8 relative">
+                <div class="absolute w-3 h-3 bg-cardBorder rounded-full -left-[6.5px] top-1.5 ring-4 ring-bgMain"></div>
+                <h3 class="text-xl font-bold mb-2 text-textMain">Analista de Banco de Dados - Desenvolvimento T-SQL</h3>
+                <div class="inline-flex items-center gap-1.5 bg-badgeBg border border-cardBorder text-textGray text-xs px-2.5 py-1 rounded-md mb-4 font-medium">
+                    <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                    SGC Consultoria & Sistemas | Out 2019 - Abr 2022
+                </div>
+                <p class="text-textGray text-sm mb-4 leading-relaxed max-w-3xl">
+                    Atuação em engenharia e manipulação de dados para sistema de gerenciamento de cobrança, englobando rotinas de ETL e desenvolvimento SQL avançado.
+                </p>
+                <ul class="custom-bullets">
+                    <li>Desenvolvimento e manutenção de layouts em SQL, análise e levantamento de dados, enquadramento de carga e tratamento de dados (ETL).</li>
+                    <li>Programação em T-SQL, modelagem relacional e manutenção de scripts de importação e exportação de dados em larga escala.</li>
+                    <li>Criação e manutenção de objetos de banco de dados (tabelas, triggers, índices, views) no Microsoft SQL Server.</li>
+                </ul>
+            </div>
+
+            <!-- Reserva -->
+            <div class="mb-12 pl-8 relative">
+                <div class="absolute w-3 h-3 bg-cardBorder rounded-full -left-[6.5px] top-1.5 ring-4 ring-bgMain"></div>
+                <h3 class="text-xl font-bold mb-2 text-textMain">Analista de Suporte Nível 2</h3>
+                <div class="inline-flex items-center gap-1.5 bg-badgeBg border border-cardBorder text-textGray text-xs px-2.5 py-1 rounded-md mb-4 font-medium">
+                    <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                    Reserva | Jun 2019 - Out 2019
+                </div>
+                <p class="text-textGray text-sm mb-4 leading-relaxed max-w-3xl">
+                    Suporte técnico especializado às lojas e operações, assegurando a continuidade e integridade operacional dos sistemas de ponto de venda.
+                </p>
+                <ul class="custom-bullets">
+                    <li>Atendimento e resolução de chamados de 2º nível com elaboração de scripts corretivos em SQL Server.</li>
+                    <li>Correção, manutenção e sustentação de ambiente PDV integrado (Linx POS, Linx Manager, NFC-e).</li>
+                </ul>
+            </div>
+
+            <!-- MaraMac -->
+            <div class="pl-8 relative">
+                <div class="absolute w-3 h-3 bg-cardBorder rounded-full -left-[6.5px] top-1.5 ring-4 ring-bgMain"></div>
+                <h3 class="text-xl font-bold mb-2 text-textMain">Analista de T.I Pleno</h3>
+                <div class="inline-flex items-center gap-1.5 bg-badgeBg border border-cardBorder text-textGray text-xs px-2.5 py-1 rounded-md mb-4 font-medium">
+                    <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                    MaraMac | Set 2015 - Mai 2019
+                </div>
+                <p class="text-textGray text-sm mb-4 leading-relaxed max-w-3xl">
+                    Responsável por projetos de infraestrutura de dados e sistemas, atuando na migração de bases corporativas e geração de relatórios estratégicos.
+                </p>
+                <ul class="custom-bullets">
+                    <li>Liderança no projeto interno de migração e replicação de dados para implantação de Sistema de Retaguarda (levantamento e execução).</li>
+                    <li>Manipulação e sustentação de banco de dados SQL Server e confecção de relatórios analíticos para as áreas comercial e operacional.</li>
+                    <li>Instalação, atualização e suporte operacional aos sistemas Linx Retaguarda e Frente de Loja, com elaboração de manuais e treinamentos.</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contato" class="max-w-[1100px] mx-auto px-6 py-20 pb-32">
+        <div class="bg-cardBg border border-cardBorder rounded-[2rem] p-12 text-center shadow-2xl flex flex-col items-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bgMain/50 pointer-events-none"></div>
+            
+            <h2 class="text-4xl font-extrabold mb-4 tracking-tight text-textMain relative z-10">Vamos Conversar?</h2>
+            <p class="text-textGray max-w-lg mb-8 relative z-10">
+                Atualmente aberto para novas oportunidades em Engenharia de Dados e Analytics. Sinta-se à vontade para enviar um email ou me adicionar no LinkedIn.
+            </p>
+            
+            <div class="flex items-center gap-2 bg-badgeBg border border-cardBorder px-4 py-2 rounded-full text-sm text-textMain mb-10 relative z-10">
+                <i data-lucide="map-pin" class="w-4 h-4 text-primary"></i>
+                Rio de Janeiro-RJ, Brasil
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 relative z-10">
+                <button id="copy-email" class="bg-primary hover:bg-primary/80 text-white px-8 py-3 rounded-lg font-medium transition flex items-center gap-2">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                    <span id="copy-email-text">Copiar Email</span>
+                </button>
+                <button class="bg-badgeBg border border-cardBorder hover:bg-cardBorder text-textMain px-8 py-3 rounded-lg font-medium transition flex items-center gap-2">
+                  <a href="https://www.linkedin.com/in/andre-ribeiro-borges/" class="text-textGray hover:text-primary transition inline-flex" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                <i data-lucide="linkedin" class="w-4 h-4"></i> Acessar LinkedIn
+                </a>  
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-cardBorder py-8 bg-bgMain transition-colors duration-300">
+        <div class="max-w-[1100px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <div class="text-lg font-bold tracking-tight mb-1 text-textMain">André Borges</div>
+                <div class="text-xs text-textGray">Engenheiro de Dados | Analytics Engineer</div>
+            </div>
+            
+            <div class="flex flex-col items-center md:items-end gap-2">
+                <div class="flex gap-4 text-textGray">
+                    <a href="https://github.com/andreribeiro41" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition" aria-label="GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>
+                    <a href="https://www.linkedin.com/in/andre-ribeiro-borges/" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition" aria-label="LinkedIn"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                </div>
+                <div class="text-xs text-textGray flex items-center gap-4 mt-2 md:mt-0">
+                    © 2026 Desenvolvido por André Borges.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <button id="back-to-top" aria-label="Voltar ao topo">
+        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+    </button>
+
+    <script>
+        // 1. Renderiza os ícones iniciais
+        lucide.createIcons();
+
+        // 2. Lógica de Alternância de Tema (Dark / Light)
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const htmlElement = document.documentElement;
+
+        // Função para atualizar o ícone baseado no tema atual
+        function updateIcon() {
+            if (htmlElement.classList.contains('dark')) {
+                themeIcon.setAttribute('data-lucide', 'sun'); // Mostra sol no tema escuro
+            } else {
+                themeIcon.setAttribute('data-lucide', 'moon'); // Mostra lua no tema claro
+            }
+            lucide.createIcons(); // Re-renderiza o ícone para aplicar a mudança
+        }
+
+        // Verifica preferência salva no localStorage (se houver)
+        if (localStorage.getItem('theme') === 'light') {
+            htmlElement.classList.remove('dark');
+        } else if (localStorage.getItem('theme') === 'dark') {
+            htmlElement.classList.add('dark');
+        }
+        updateIcon();
+
+        // Evento de clique no botão
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            
+            // Salva a preferência no navegador do usuário
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+            
+            updateIcon();
+        });
+
+        // 3. Lógica do Botão Back-to-Top
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        // Mostra/esconde o botão com base na posição do scroll
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+
+        // 4. Lógica de cópia de email
+        const emailAddress = 'andreribeiro41@hotmail.com';
+        const copyEmailBtn = document.getElementById('copy-email');
+        const copyEmailText = document.getElementById('copy-email-text');
+
+        async function copyEmailToClipboard() {
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(emailAddress);
+                } else {
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = emailAddress;
+                    tempInput.style.position = 'fixed';
+                    tempInput.style.opacity = '0';
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    tempInput.remove();
+                }
+
+                copyEmailBtn.classList.add('bg-green-600');
+                copyEmailBtn.classList.remove('hover:bg-primary/80');
+                copyEmailText.textContent = 'Email Copiado';
+                copyEmailBtn.setAttribute('aria-label', 'Email copiado');
+
+                setTimeout(() => {
+                    copyEmailBtn.classList.remove('bg-green-600');
+                    copyEmailBtn.classList.add('hover:bg-primary/80');
+                    copyEmailText.textContent = 'Copiar Email';
+                    copyEmailBtn.setAttribute('aria-label', 'Copiar Email');
+                }, 1800);
+            } catch (error) {
+                copyEmailText.textContent = 'Não foi possível copiar';
+                setTimeout(() => {
+                    copyEmailText.textContent = 'Copiar Email';
+                }, 1800);
+            }
+        }
+
+        copyEmailBtn.addEventListener('click', copyEmailToClipboard);
+
+        // Scroll suave para o topo ao clicar
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
